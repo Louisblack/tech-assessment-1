@@ -7,5 +7,5 @@ public interface AccountRepository {
      * @param accountNumber The unique account number for the requested account
      * @return The Account with the unique account number provided
      */
-    Account get(long accountNumber);
+    Account get(String accountNumber);
 }

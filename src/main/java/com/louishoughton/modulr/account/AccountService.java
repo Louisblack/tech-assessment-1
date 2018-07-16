@@ -10,7 +10,7 @@ public interface AccountService {
      * @param accountNumber The unique account number
      * @return The balance in pence
      */
-    long checkBalance(long accountNumber);
+    long checkBalance(String accountNumber);
 
     /**
      * Makes a withdrawal from the account with the account number provided.
@@ -18,5 +18,5 @@ public interface AccountService {
      * @param withdrawalInPence The amount in pence to withdraw
      * @return The new balance in pence after the withdrawal
      */
-    long withdraw(long accountNumber, long withdrawalInPence);
+    long withdraw(String accountNumber, long withdrawalInPence);
 }
