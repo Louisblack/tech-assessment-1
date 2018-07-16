@@ -15,4 +15,9 @@ public class CashBoxImpl implements CashBox {
     public long replenish(Map<Note, Long> notes) {
         return 0;
     }
+
+    @Override
+    public long withdraw(Map<Note, Long> notes) {
+        return 0;
+    }
 }
