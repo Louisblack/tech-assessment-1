@@ -2,13 +2,13 @@ package com.louishoughton.modulr.atm;
 
 public enum Note {
     FIVE(500),
-    TEN(10000),
-    TWENTY(20000),
-    FIFTY(500000);
+    TEN(1000),
+    TWENTY(2000),
+    FIFTY(5000);
 
-    long value;
+    int value;
 
-    Note(long value) {
+    Note(int value) {
         this.value = value;
     }
 

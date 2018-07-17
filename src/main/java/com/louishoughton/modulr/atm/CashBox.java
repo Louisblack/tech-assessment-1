@@ -1,6 +1,7 @@
 package com.louishoughton.modulr.atm;
 
 import java.util.Map;
+import java.util.Optional;
 
 public interface CashBox {
 
@@ -19,8 +20,9 @@ public interface CashBox {
 
     /**
      * Makes a withdrawal from the account with the account number provided.
-     * @param notes A Map of notes and number of notes to withdraw from the cash box
-     * @return The new balance of the cash box in pence
+     * @param withdrawalInPence The amount to withdraw in pence
+     * @return An Optional that may be empty if withdrawal failed or contain a Map of the notes and number
+     * of each notes for the withdrawal
      */
-    long withdraw(Map<Note, Long> notes);
+    Optional<Map<Note, Long>> withdraw(long withdrawalInPence);
 }
