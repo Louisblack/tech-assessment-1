@@ -7,6 +7,7 @@ public interface AccountService {
 
     /**
      * Check the balance of the account with the account number provided
+     *
      * @param accountNumber The unique account number
      * @return The balance in pence
      */
@@ -14,7 +15,8 @@ public interface AccountService {
 
     /**
      * Makes a withdrawal from the account with the account number provided.
-     * @param accountNumber The unique account number
+     *
+     * @param accountNumber     The unique account number
      * @param withdrawalInPence The amount in pence to withdraw
      * @return The new balance in pence after the withdrawal
      */

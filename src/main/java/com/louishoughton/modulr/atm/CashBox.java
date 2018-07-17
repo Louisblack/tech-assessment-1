@@ -7,12 +7,14 @@ public interface CashBox {
 
     /**
      * Shows the balance of the ATM cash box.
+     *
      * @return The balance of the ATM's cash box in pence
      */
     long checkBalance();
 
     /**
      * Replenish the atm cash box with the provided number of notes in specific denominations
+     *
      * @param notes A Map of Notes and number of each note
      * @return The new balance in pence that the ATM cash box now holds
      */
@@ -20,6 +22,7 @@ public interface CashBox {
 
     /**
      * Makes a withdrawal from the account with the account number provided.
+     *
      * @param withdrawalInPence The amount to withdraw in pence
      * @return An Optional that may be empty if withdrawal failed or contain a Map of the notes and number
      * of each notes for the withdrawal

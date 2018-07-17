@@ -1,7 +1,6 @@
 package com.louishoughton.modulr.atm;
 
 import com.google.common.collect.ImmutableMap;
-import org.hamcrest.CoreMatchers;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 public class CashBoxImplTest {
 
@@ -36,7 +35,7 @@ public class CashBoxImplTest {
     @Test
     public void should_add_thirty_five_pounds() {
         cashBox.replenish(ImmutableMap.of(Note.TWENTY, 1L,
-                                          Note.FIVE,   3L));
+                Note.FIVE, 3L));
         assertThat(cashBox.checkBalance(), equalTo(3500L));
     }
 
@@ -81,8 +80,8 @@ public class CashBoxImplTest {
     @Test
     public void should_withdraw_70_pounds() {
         cashBox.replenish(ImmutableMap.of(Note.FIFTY, 2L,
-                                          Note.TWENTY,1L,
-                                          Note.TEN,   2L));
+                Note.TWENTY, 1L,
+                Note.TEN, 2L));
 
         Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(7000);
 
@@ -98,8 +97,8 @@ public class CashBoxImplTest {
     @Test
     public void should_withdraw_80_pounds() {
         cashBox.replenish(ImmutableMap.of(Note.FIFTY, 2L,
-                                          Note.TWENTY,1L,
-                                          Note.TEN,   2L));
+                Note.TWENTY, 1L,
+                Note.TEN, 2L));
 
         Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(8000);
 
@@ -115,8 +114,8 @@ public class CashBoxImplTest {
 
     @Test
     public void should_withdraw_80_pounds_without_fiftys() {
-        cashBox.replenish(ImmutableMap.of(Note.TWENTY,2L,
-                                          Note.TEN,   4L));
+        cashBox.replenish(ImmutableMap.of(Note.TWENTY, 2L,
+                Note.TEN, 4L));
 
         Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(8000);
 
