@@ -107,4 +107,18 @@ public class CashBoxImplTest {
         assertThat(withdrawal.get(Note.TWENTY), is(1L));
         assertThat(withdrawal.get(Note.TEN), is(1L));
     }
+
+    @Test
+    public void should_withdraw_80_pounds_without_fiftys() {
+        cashBox.replenish(ImmutableMap.of(Note.TWENTY,2L,
+                                          Note.TEN,   4L));
+
+        Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(8000);
+
+        assertThat(maybeWithdrawal.isPresent(), is(true));
+
+        Map<Note, Long> withdrawal = maybeWithdrawal.get();
+        assertThat(withdrawal.get(Note.TWENTY), is(2L));
+        assertThat(withdrawal.get(Note.TEN), is(4L));
+    }
 }
