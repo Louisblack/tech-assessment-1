@@ -1,12 +1,10 @@
 package com.louishoughton.modulr.atm;
 
-
-import com.google.common.collect.ImmutableMap;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class CashBoxImpl implements CashBox {
 
@@ -43,7 +41,7 @@ public class CashBoxImpl implements CashBox {
     }
 
     @Override
-    public Optional<Map<Note, Long>> withdraw(long withdrawalInPence) {
+    public synchronized Optional<Map<Note, Long>> withdraw(long withdrawalInPence) {
         if (withdrawalInPence % 500 != 0) {
             throw new IllegalArgumentException("withdrawalInPence must be in multiples of 500");
         }
@@ -55,11 +53,17 @@ public class CashBoxImpl implements CashBox {
                 .sorted((o1, o2) -> o2.getKey().value - o1.getKey().value)
                 .collect(Collectors.toList());
 
-        return Optional.of(calculateNotesToWithdraw(withdrawalInPence, sorted));
+        Map<Note, Long> notesToWithdraw = calculateNotesToWithdraw(withdrawalInPence, sorted);
+
+        notesToWithdraw.forEach((note, howManyToWithdraw) -> {
+            cash.compute(note, (k2, v2) -> v2 - howManyToWithdraw);
+        });
+
+        return Optional.of(notesToWithdraw);
     }
 
     private static Map<Note, Long> calculateNotesToWithdraw(long withdrawalInPence, List<Map.Entry<Note, Long>> notesAndNumbers) {
-        if(notesAndNumbers.isEmpty()) {
+        if (notesAndNumbers.isEmpty()) {
             return new HashMap<>();
         }
         Map.Entry<Note, Long> largestNote = notesAndNumbers.get(0);

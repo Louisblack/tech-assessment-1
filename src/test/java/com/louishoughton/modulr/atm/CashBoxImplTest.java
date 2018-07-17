@@ -75,6 +75,7 @@ public class CashBoxImplTest {
 
         Map<Note, Long> withdrawal = maybeWithdrawal.get();
         assertThat(withdrawal.get(Note.FIFTY), is(1L));
+        assertThat(cashBox.checkBalance(), equalTo(0L));
     }
 
     @Test
@@ -90,6 +91,8 @@ public class CashBoxImplTest {
         Map<Note, Long> withdrawal = maybeWithdrawal.get();
         assertThat(withdrawal.get(Note.FIFTY), is(1L));
         assertThat(withdrawal.get(Note.TWENTY), is(1L));
+
+        assertThat(cashBox.checkBalance(), equalTo(7000L));
     }
 
     @Test
@@ -106,6 +109,8 @@ public class CashBoxImplTest {
         assertThat(withdrawal.get(Note.FIFTY), is(1L));
         assertThat(withdrawal.get(Note.TWENTY), is(1L));
         assertThat(withdrawal.get(Note.TEN), is(1L));
+
+        assertThat(cashBox.checkBalance(), equalTo(6000L));
     }
 
     @Test
@@ -120,5 +125,8 @@ public class CashBoxImplTest {
         Map<Note, Long> withdrawal = maybeWithdrawal.get();
         assertThat(withdrawal.get(Note.TWENTY), is(2L));
         assertThat(withdrawal.get(Note.TEN), is(4L));
+
+        assertThat(cashBox.checkBalance(), equalTo(0L));
+
     }
 }
