@@ -49,11 +49,19 @@ public class CashBoxImpl implements CashBox {
             return Optional.empty();
         }
 
-        List<Map.Entry<Note, Long>> sorted = cash.entrySet().stream()
+        List<Map.Entry<Note, Long>> sortedListOfNotesAndAmounts = cash.entrySet().stream()
+                .filter(e -> e.getValue() > 0)
                 .sorted((o1, o2) -> o2.getKey().value - o1.getKey().value)
                 .collect(Collectors.toList());
 
-        Map<Note, Long> notesToWithdraw = calculateNotesToWithdraw(withdrawalInPence, sorted);
+        Map.Entry<Note, Long> smallestNote = sortedListOfNotesAndAmounts.get(sortedListOfNotesAndAmounts.size() - 1);
+
+        // Can we service the withdrawal with the smallest notes we have?
+        if (withdrawalInPence % smallestNote.getKey().value != 0) {
+            return Optional.empty();
+        }
+
+        Map<Note, Long> notesToWithdraw = calculateNotesToWithdraw(withdrawalInPence, sortedListOfNotesAndAmounts);
 
         notesToWithdraw.forEach((note, howManyToWithdraw) -> {
             cash.compute(note, (k2, v2) -> v2 - howManyToWithdraw);

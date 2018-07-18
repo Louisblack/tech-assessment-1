@@ -126,6 +126,14 @@ public class CashBoxImplTest {
         assertThat(withdrawal.get(Note.TEN), is(4L));
 
         assertThat(cashBox.checkBalance(), equalTo(0L));
+    }
 
+    @Test
+    public void should_not_allow_withdrawal_of_ten_when_only_twenties() {
+        cashBox.replenish(ImmutableMap.of(Note.TWENTY, 1L));
+
+        Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(1000);
+
+        assertThat(maybeWithdrawal.isPresent(), is(false));
     }
 }
