@@ -41,33 +41,41 @@ public class CashBoxImpl implements CashBox {
     }
 
     @Override
-    public synchronized Optional<Map<Note, Long>> withdraw(long withdrawalInPence) {
+    public synchronized Map<Note, Long> withdraw(long withdrawalInPence) {
+        List<Map.Entry<Note, Long>> sortedListOfNotesAndAmounts = getSortedListOfNotesWithAmounts();
+
+        validateWithdrawalIsPossible(withdrawalInPence, sortedListOfNotesAndAmounts);
+
+        Map<Note, Long> notesToWithdraw = calculateNotesToWithdraw(withdrawalInPence, sortedListOfNotesAndAmounts);
+
+        withdraw(notesToWithdraw);
+
+        return notesToWithdraw;
+    }
+
+    private List<Map.Entry<Note, Long>> getSortedListOfNotesWithAmounts() {
+        return cash.entrySet().stream()
+                .filter(e -> e.getValue() > 0)
+                .sorted((o1, o2) -> o2.getKey().value - o1.getKey().value)
+                .collect(Collectors.toList());
+    }
+
+    private void validateWithdrawalIsPossible(long withdrawalInPence, List<Map.Entry<Note, Long>> sortedListOfNotesAndAmounts) {
         if (withdrawalInPence % 500 != 0) {
             throw new IllegalArgumentException("withdrawalInPence must be in multiples of 500");
         }
         if (withdrawalInPence > checkBalance()) {
-            return Optional.empty();
+            throw new WithdrawalExceedsBalanceException(String.format("Withdrawal of %s is more than balance %s",
+                    withdrawalInPence, checkBalance()));
         }
-
-        List<Map.Entry<Note, Long>> sortedListOfNotesAndAmounts = cash.entrySet().stream()
-                .filter(e -> e.getValue() > 0)
-                .sorted((o1, o2) -> o2.getKey().value - o1.getKey().value)
-                .collect(Collectors.toList());
 
         Map.Entry<Note, Long> smallestNote = sortedListOfNotesAndAmounts.get(sortedListOfNotesAndAmounts.size() - 1);
 
         // Can we service the withdrawal with the smallest notes we have?
         if (withdrawalInPence % smallestNote.getKey().value != 0) {
-            return Optional.empty();
+            throw new WithdrawalNotDivisibleByNotesException(String.format("Withdrawal of %s cannot be serviced with notes %s",
+                    withdrawalInPence, cash));
         }
-
-        Map<Note, Long> notesToWithdraw = calculateNotesToWithdraw(withdrawalInPence, sortedListOfNotesAndAmounts);
-
-        notesToWithdraw.forEach((note, howManyToWithdraw) -> {
-            cash.compute(note, (k2, v2) -> v2 - howManyToWithdraw);
-        });
-
-        return Optional.of(notesToWithdraw);
     }
 
     private static Map<Note, Long> calculateNotesToWithdraw(long withdrawalInPence, List<Map.Entry<Note, Long>> notesAndNumbers) {
@@ -89,5 +97,11 @@ public class CashBoxImpl implements CashBox {
     private static Map<Note, Long> combineMaps(Map<Note, Long> a, Map<Note, Long> b) {
         a.putAll(b);
         return a;
+    }
+
+    private void withdraw(Map<Note, Long> notesToWithdraw) {
+        notesToWithdraw.forEach((note, howManyToWithdraw) -> {
+            cash.compute(note, (k2, v2) -> v2 - howManyToWithdraw);
+        });
     }
 }

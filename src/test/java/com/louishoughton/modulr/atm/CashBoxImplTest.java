@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -17,7 +16,7 @@ public class CashBoxImplTest {
     private CashBoxImpl cashBox;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         cashBox = new CashBoxImpl();
     }
 
@@ -56,23 +55,18 @@ public class CashBoxImplTest {
         cashBox.withdraw(275);
     }
 
-    @Test
-    public void should_return_empty_optional_if_withdrawal_exceeds_balance() {
+    @Test(expected = WithdrawalExceedsBalanceException.class)
+    public void should_throw_exception_if_withdrawal_exceeds_balance() {
         cashBox.replenish(ImmutableMap.of(Note.TWENTY, 1L));
-        Optional<Map<Note, Long>> withdrawal = cashBox.withdraw(5000);
-
-        assertThat(withdrawal.isPresent(), is(false));
+        cashBox.withdraw(5000);
     }
 
     @Test
     public void should_withdraw_a_single_fifty_note() {
         cashBox.replenish(ImmutableMap.of(Note.FIFTY, 1L));
 
-        Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(5000);
+        Map<Note, Long> withdrawal = cashBox.withdraw(5000);
 
-        assertThat(maybeWithdrawal.isPresent(), is(true));
-
-        Map<Note, Long> withdrawal = maybeWithdrawal.get();
         assertThat(withdrawal.get(Note.FIFTY), is(1L));
         assertThat(cashBox.checkBalance(), equalTo(0L));
     }
@@ -83,11 +77,8 @@ public class CashBoxImplTest {
                 Note.TWENTY, 1L,
                 Note.TEN, 2L));
 
-        Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(7000);
+        Map<Note, Long> withdrawal = cashBox.withdraw(7000);
 
-        assertThat(maybeWithdrawal.isPresent(), is(true));
-
-        Map<Note, Long> withdrawal = maybeWithdrawal.get();
         assertThat(withdrawal.get(Note.FIFTY), is(1L));
         assertThat(withdrawal.get(Note.TWENTY), is(1L));
 
@@ -100,11 +91,8 @@ public class CashBoxImplTest {
                 Note.TWENTY, 1L,
                 Note.TEN, 2L));
 
-        Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(8000);
+        Map<Note, Long> withdrawal = cashBox.withdraw(8000);
 
-        assertThat(maybeWithdrawal.isPresent(), is(true));
-
-        Map<Note, Long> withdrawal = maybeWithdrawal.get();
         assertThat(withdrawal.get(Note.FIFTY), is(1L));
         assertThat(withdrawal.get(Note.TWENTY), is(1L));
         assertThat(withdrawal.get(Note.TEN), is(1L));
@@ -117,23 +105,17 @@ public class CashBoxImplTest {
         cashBox.replenish(ImmutableMap.of(Note.TWENTY, 2L,
                 Note.TEN, 4L));
 
-        Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(8000);
+        Map<Note, Long> withdrawal = cashBox.withdraw(8000);
 
-        assertThat(maybeWithdrawal.isPresent(), is(true));
-
-        Map<Note, Long> withdrawal = maybeWithdrawal.get();
         assertThat(withdrawal.get(Note.TWENTY), is(2L));
         assertThat(withdrawal.get(Note.TEN), is(4L));
 
         assertThat(cashBox.checkBalance(), equalTo(0L));
     }
 
-    @Test
+    @Test(expected = WithdrawalNotDivisibleByNotesException.class)
     public void should_not_allow_withdrawal_of_ten_when_only_twenties() {
         cashBox.replenish(ImmutableMap.of(Note.TWENTY, 1L));
-
-        Optional<Map<Note, Long>> maybeWithdrawal = cashBox.withdraw(1000);
-
-        assertThat(maybeWithdrawal.isPresent(), is(false));
+        cashBox.withdraw(1000);
     }
 }

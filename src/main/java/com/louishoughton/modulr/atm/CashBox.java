@@ -24,8 +24,8 @@ public interface CashBox {
      * Makes a withdrawal from the account with the account number provided.
      *
      * @param withdrawalInPence The amount to withdraw in pence
-     * @return An Optional that may be empty if withdrawal failed or contain a Map of the notes and number
+     * @return A Map of the notes and number of each note
      * of each notes for the withdrawal
      */
-    Optional<Map<Note, Long>> withdraw(long withdrawalInPence);
+    Map<Note, Long> withdraw(long withdrawalInPence);
 }
