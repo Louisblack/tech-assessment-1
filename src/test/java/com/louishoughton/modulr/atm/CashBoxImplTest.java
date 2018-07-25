@@ -55,6 +55,12 @@ public class CashBoxImplTest {
         cashBox.withdraw(275);
     }
 
+    @Test(expected = WithdrawalNotDivisibleByNotesException.class)
+    public void should_throw_exception_if_withdrawal_is_not_multiple_of_smallest_note() {
+        cashBox.replenish(ImmutableMap.of(Note.TWENTY, 1L));
+        cashBox.withdraw(1000);
+    }
+
     @Test(expected = WithdrawalExceedsBalanceException.class)
     public void should_throw_exception_if_withdrawal_exceeds_balance() {
         cashBox.replenish(ImmutableMap.of(Note.TWENTY, 1L));
