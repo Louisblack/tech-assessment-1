@@ -92,7 +92,7 @@ public class CashBoxImpl implements CashBox {
     private boolean hasEnoughFiversToFillOut(List<Map.Entry<Note, Long>> notesAndNumbers) {
         Optional<Map.Entry<Note, Long>> smallestNonFiveNote = getSmallestNonFiveNote(notesAndNumbers);
         return smallestNonFiveNote.isPresent() &&
-                cash.getOrDefault(Note.FIVE, 0L) <= smallestNonFiveNote.get().getKey().value / Note.FIVE.value;
+                cash.getOrDefault(Note.FIVE, 0L) >= smallestNonFiveNote.get().getKey().value / Note.FIVE.value;
     }
 
     private Optional<Map.Entry<Note, Long>> getSmallestNonFiveNote(List<Map.Entry<Note, Long>> notesAndNumbers) {
