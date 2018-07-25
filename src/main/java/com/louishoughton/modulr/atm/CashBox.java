@@ -1,7 +1,6 @@
 package com.louishoughton.modulr.atm;
 
 import java.util.Map;
-import java.util.Optional;
 
 public interface CashBox {
 
