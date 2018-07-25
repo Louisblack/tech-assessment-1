@@ -21,7 +21,7 @@ public interface AtmService {
      * @param accountNumber The unique account number of the account for which to check the balance
      * @return The balance of the account formatted as a string
      */
-    String checkBalance(long accountNumber);
+    String checkBalance(String accountNumber);
 
     /**
      * Makes a withdrawal from the account with the account number provided.
@@ -30,5 +30,5 @@ public interface AtmService {
      * @param withdrawalInPence The withdrawal amount to make in pence
      * @return A Map of notes and the number of each note withdrawn
      */
-    Map<Note, Long> withdraw(long accountNumber, long withdrawalInPence);
+    Withdrawal withdraw(String accountNumber, long withdrawalInPence);
 }
