@@ -32,6 +32,7 @@ public class AtmServiceImpl implements AtmService {
 
     @Override
     public Withdrawal withdraw(String accountNumber, long withdrawalInPence) {
+        LOG.debug("Attempting withdrawal of {} from {} with a cash box state of {}", withdrawalInPence, accountNumber, cashBox);
         try {
             return new Withdrawal(attemptWithdrawal(accountNumber, withdrawalInPence));
         } catch (RuntimeException e) {

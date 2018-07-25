@@ -1,5 +1,8 @@
 package com.louishoughton.modulr.atm;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +14,8 @@ import static com.louishoughton.modulr.atm.NotesCalculator.calculateNotesToWithd
 public class CashBoxImpl implements CashBox {
 
     private final Map<Note, Long> cash = new HashMap<>();
+
+    private static final Logger LOG = LoggerFactory.getLogger(CashBoxImpl.class);
 
     private static Long addNotes(Long a, Long b) {
         return a + b;
@@ -50,7 +55,8 @@ public class CashBoxImpl implements CashBox {
 
         Map<Note, Long> notesToWithdraw =
                 calculateNotesToWithdraw(withdrawalInPence, sortedListOfNotesAndAmounts, copyOf(cash));
-
+        LOG.debug("Calculated {} notes to withdraw from withdrawal of {} with a cash box state of {}",
+                notesToWithdraw, withdrawalInPence, this);
         withdraw(notesToWithdraw);
 
         return notesToWithdraw;
@@ -85,5 +91,12 @@ public class CashBoxImpl implements CashBox {
         notesToWithdraw.forEach((note, howManyToWithdraw) -> {
             cash.compute(note, (k2, v2) -> v2 - howManyToWithdraw);
         });
+    }
+
+    @Override
+    public String toString() {
+        return "CashBoxImpl{" +
+                "cash=" + cash +
+                '}';
     }
 }
