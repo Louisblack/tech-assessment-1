@@ -113,6 +113,19 @@ public class CashBoxImplTest {
         assertThat(cashBox.checkBalance(), equalTo(0L));
     }
 
+    @Test
+    public void should_withdraw_two_fivers() {
+        cashBox.replenish(ImmutableMap.of(Note.FIVE, 2L,
+                Note.TEN, 4L));
+
+        Map<Note, Long> withdrawal = cashBox.withdraw(1000);
+
+        assertThat(withdrawal.get(Note.FIVE), is(2L));
+        assertThat(withdrawal.getOrDefault(Note.TEN, 0L), is(0L));
+
+        assertThat(cashBox.checkBalance(), equalTo(4000L));
+    }
+
     @Test(expected = WithdrawalNotDivisibleByNotesException.class)
     public void should_not_allow_withdrawal_of_ten_when_only_twenties() {
         cashBox.replenish(ImmutableMap.of(Note.TWENTY, 1L));
