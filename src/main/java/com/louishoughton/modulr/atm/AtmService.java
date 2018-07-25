@@ -28,7 +28,7 @@ public interface AtmService {
      *
      * @param accountNumber     The unique of the account for which to make the withdrawal
      * @param withdrawalInPence The withdrawal amount to make in pence
-     * @return A Map of notes and the number of each note withdrawn
+     * @return A withdrawal object containing notes dispensed or an error if withdrawal failed
      */
     Withdrawal withdraw(String accountNumber, long withdrawalInPence);
 }
